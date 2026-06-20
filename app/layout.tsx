@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Spectral, Teko } from "next/font/google";
+import { DemoProvider } from "@/app/components/demo-provider";
 import "./globals.css";
 
 const displayFont = Teko({
@@ -36,7 +37,9 @@ export default function RootLayout({
       lang="es"
       className={`${displayFont.variable} ${bodyFont.variable} ${utilityFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <DemoProvider>{children}</DemoProvider>
+      </body>
     </html>
   );
 }

@@ -1,5 +1,5 @@
-import { ExpressShowcase } from "@/app/components/express-showcase";
+import { LoginScreen } from "@/app/components/screens/login-screen";
 
 export default function Home() {
-  return <ExpressShowcase />;
+  return <LoginScreen />;
 }
