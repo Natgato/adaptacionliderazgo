@@ -21,6 +21,12 @@ export function WaiterScreen() {
       title="Mozo / Salon"
       subtitle="El mozo vigila el estado de las mesas, ve los pedidos por servir y puede cerrar el circuito marcando la orden como servida."
       trafficLevel={state.trafficLevel}
+      navLinks={[
+        { href: "/", label: "Inicio" },
+        { href: "/hornero", label: "Cocina" },
+        { href: "/mozo", label: "Mozo" },
+        { href: "/admin", label: "Admin" },
+      ]}
     >
       <div className="space-y-6">
         <KpiStrip
@@ -35,25 +41,26 @@ export function WaiterScreen() {
         <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <SectionCard eyebrow="Mesas" title="Estado del salon">
             <div className="grid gap-4 md:grid-cols-2">
-              {state.tables.map((table) => (
-                <TableCard
-                  key={table.id}
-                  table={table}
-                  action={
-                    <div className="flex flex-wrap gap-2">
-                      {tableStatusOptions.map((option) => (
-                        <button
-                          key={`${table.id}-${option.value}`}
-                          type="button"
-                          className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100"
-                          onClick={() => updateTableStatus(table.id, option.value)}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  }
-                />
+              {state.tables.map((table, index) => (
+                <div key={table.id} className="panel-enter" style={{ ["--i" as string]: index }}>
+                  <TableCard
+                    table={table}
+                    action={
+                      <div className="flex flex-wrap gap-2">
+                        {tableStatusOptions.map((option) => (
+                          <button
+                            key={`${table.id}-${option.value}`}
+                            type="button"
+                            className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100"
+                            onClick={() => updateTableStatus(table.id, option.value)}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    }
+                  />
+                </div>
               ))}
             </div>
           </SectionCard>
@@ -78,11 +85,7 @@ export function WaiterScreen() {
                     table={state.tables.find((table) => table.id === order.tableId)}
                     menu={state.menu}
                     action={
-                      <button
-                        type="button"
-                        className="action-pill bg-white text-slate-950"
-                        onClick={() => updateOrderStatus(order.id, "servido")}
-                      >
+                      <button type="button" className="action-pill bg-white text-slate-950" onClick={() => updateOrderStatus(order.id, "servido")}>
                         Marcar servido
                       </button>
                     }

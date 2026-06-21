@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import type {
   CartItem,
   MenuCategory,
@@ -16,8 +17,8 @@ export const orderLabels: Record<OrderStatus, string> = {
   recibido: "Pedido recibido",
   preparacion: "En preparacion",
   horno: "En horno",
-  listo: "Listo",
-  servido: "Servido",
+  listo: "Listo para entregar",
+  servido: "Entregado",
 };
 
 export const tableLabels: Record<TableStatus, string> = {
@@ -51,7 +52,7 @@ export function SectionCard({
   action?: React.ReactNode;
 }) {
   return (
-    <section className="hud-panel px-5 py-5 sm:px-6 sm:py-6">
+    <section className="hud-panel panel-enter px-5 py-5 sm:px-6 sm:py-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-slate-300">{eyebrow}</p>
@@ -73,8 +74,8 @@ export function KpiStrip({
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      {items.map((item) => (
-        <div key={item.label} className="module-card">
+      {items.map((item, index) => (
+        <div key={item.label} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
           <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">{item.label}</p>
           <p className="mt-2 font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
             {item.value}
@@ -104,6 +105,158 @@ export function StatusChip({
     <span className={`inline-flex items-center rounded-full border px-3 py-1 font-mono text-[0.62rem] uppercase tracking-[0.22em] ${tones[tone]}`}>
       {label}
     </span>
+  );
+}
+
+export function TopInfoBar({
+  guestName,
+  points,
+  tableName,
+  orderLabel,
+}: {
+  guestName: string;
+  points: number;
+  tableName?: string | null;
+  orderLabel?: string | null;
+}) {
+  return (
+    <div className="hud-panel top-strip px-4 py-3">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="info-chip">
+          <span className="info-chip-label">Invitado</span>
+          <span className="info-chip-value">{guestName || "Sin nombre"}</span>
+        </div>
+        <div className="info-chip">
+          <span className="info-chip-label">Mesa</span>
+          <span className="info-chip-value">{tableName || "Sin elegir"}</span>
+        </div>
+        <div className="info-chip">
+          <span className="info-chip-label">Puntos</span>
+          <span className="info-chip-value">{points} pts</span>
+        </div>
+        <div className="info-chip">
+          <span className="info-chip-label">Estado</span>
+          <span className="info-chip-value">{orderLabel || "Sin pedido"}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type RewardItem = {
+  id: string;
+  name: string;
+  cost: number;
+  bonus: string;
+  note: string;
+};
+
+const REWARDS: RewardItem[] = [
+  { id: "r1", name: "Borde crocante", cost: 120, bonus: "+ sabor", note: "Mejora tu siguiente pizza sin pagar extra." },
+  { id: "r2", name: "Bebida fria", cost: 180, bonus: "+ refresco", note: "Canje simple para acompanar una porcion o combo." },
+  { id: "r3", name: "Extra queso", cost: 240, bonus: "+ intensidad", note: "Sube el nivel del siguiente pedido con doble queso." },
+];
+
+export function RewardsPanel({ points }: { points: number }) {
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(REWARDS[0].id);
+  const selectedReward = useMemo(
+    () => REWARDS.find((reward) => reward.id === selectedId) ?? REWARDS[0],
+    [selectedId],
+  );
+
+  return (
+    <>
+      <button type="button" className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100" onClick={() => setOpen(true)}>
+        Ver recompensas
+      </button>
+      {open ? (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 px-4 backdrop-blur-[2px]">
+          <div className="reward-panel w-full max-w-5xl overflow-hidden border border-cyan-300/25 bg-[linear-gradient(140deg,_rgba(11,20,60,0.98),_rgba(8,13,35,0.98))] shadow-[0_30px_90px_rgba(0,0,0,0.5)]">
+            <div className="grid gap-0 lg:grid-cols-[0.8fr_1.2fr]">
+              <div className="relative overflow-hidden border-r border-white/10 bg-[linear-gradient(180deg,_rgba(5,14,53,0.95),_rgba(7,12,31,0.95))] px-5 py-6">
+                <p className="font-display text-6xl uppercase leading-none tracking-[0.08em] text-white">Premios</p>
+                <p className="mt-3 max-w-xs text-sm leading-6 text-slate-300">
+                  Mientras esperas acumulas puntos y desbloqueas mejoras para tu siguiente visita.
+                </p>
+                <div className="mt-6 rounded-sm border border-cyan-300/20 bg-white/5 px-4 py-3">
+                  <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Saldo actual</p>
+                  <p className="mt-2 font-display text-5xl uppercase leading-none tracking-[0.08em] text-cyan-100">{points} pts</p>
+                </div>
+                <div className="mt-6 space-y-2">
+                  {REWARDS.map((reward, index) => {
+                    const active = reward.id === selectedId;
+
+                    return (
+                      <button
+                        key={reward.id}
+                        type="button"
+                        onClick={() => setSelectedId(reward.id)}
+                        className={`reward-row ${active ? "reward-row-active" : ""}`}
+                        style={{ ["--i" as string]: index }}
+                      >
+                        <div className="flex-1 text-left">
+                          <p className="font-display text-4xl uppercase leading-none tracking-[0.06em] text-white">{reward.name}</p>
+                          <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-cyan-100/80">
+                            {reward.bonus}
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-black/80 px-4 py-2 font-mono text-sm uppercase tracking-[0.22em] text-white">
+                          {reward.cost}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden px-6 py-6">
+                <div className="absolute inset-y-0 right-0 w-2/5 bg-[linear-gradient(120deg,_transparent_0%,_rgba(117,239,255,0.14)_45%,_transparent_85%)]" />
+                <div className="relative flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Recompensa seleccionada</p>
+                    <p className="mt-2 font-display text-6xl uppercase leading-none tracking-[0.08em] text-white">
+                      {selectedReward.name}
+                    </p>
+                  </div>
+                  <button type="button" className="action-pill bg-white text-slate-950" onClick={() => setOpen(false)}>
+                    Cerrar
+                  </button>
+                </div>
+
+                <div className="mt-8 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+                  <div className="module-card min-h-56">
+                    <p className="font-display text-5xl uppercase leading-none tracking-[0.08em] text-cyan-100">
+                      {selectedReward.cost} pts
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-slate-300">{selectedReward.note}</p>
+                    <div className="mt-6 rounded-sm border border-white/10 bg-black/20 px-4 py-4">
+                      <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Estado del canje</p>
+                      <p className="mt-2 font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
+                        {points >= selectedReward.cost ? "Disponible" : "Sigue esperando"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="module-card min-h-56">
+                    <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Descripcion</p>
+                    <p className="mt-3 text-base leading-7 text-slate-200">
+                      Un panel de recompensas pensado para la sala de espera: claro, rapido de explicar y facil de mostrar en presentacion.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <StatusChip
+                        label={points >= selectedReward.cost ? "Puntos suficientes" : "Aun no alcanza"}
+                        tone={points >= selectedReward.cost ? "emerald" : "yellow"}
+                      />
+                      <StatusChip label="Demo sin canje real" tone="white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -203,11 +356,11 @@ export function OrderProgress({ status }: { status: OrderStatus }) {
         return (
           <div key={step} className="flex items-center gap-4">
             <div
-              className={`h-4 w-4 border-2 ${
+              className={`h-4 w-4 border-2 transition-colors duration-200 ${
                 done
                   ? "border-cyan-300 bg-cyan-300"
                   : current
-                    ? "border-yellow-300 bg-yellow-300"
+                    ? "status-pulse border-yellow-300 bg-yellow-300"
                     : "border-white/25 bg-transparent"
               }`}
             />
@@ -255,10 +408,7 @@ export function CartSummary({
 
       {cart.map((cartItem) => {
         const item = menu.find((product) => product.id === cartItem.itemId);
-
-        if (!item) {
-          return null;
-        }
+        if (!item) return null;
 
         return (
           <article key={cartItem.itemId} className="module-card">
@@ -334,9 +484,7 @@ export function OrderCard({
 
           return (
             <div key={`${order.id}-${orderItem.itemId}`} className="flex items-center justify-between gap-3 border-b border-dashed border-white/10 pb-3">
-              <p className="text-sm leading-6 text-slate-200">
-                {item?.name ?? orderItem.itemId}
-              </p>
+              <p className="text-sm leading-6 text-slate-200">{item?.name ?? orderItem.itemId}</p>
               <span className="font-mono text-[0.66rem] uppercase tracking-[0.22em] text-slate-300">
                 x{orderItem.quantity}
               </span>

@@ -15,18 +15,21 @@ export function DemoShell({
   title,
   subtitle,
   trafficLevel,
+  navLinks,
+  topBarSlot,
   children,
 }: {
   title: string;
   subtitle: string;
   trafficLevel: TrafficLevel;
+  navLinks?: Array<{ href: string; label: string }>;
+  topBarSlot?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
-  const links = [
+  const links = navLinks ?? [
     { href: "/", label: "Inicio" },
-    { href: "/cliente", label: "Cliente" },
+    { href: "/cliente", label: "Invitado" },
     { href: "/hornero", label: "Hornero" },
     { href: "/mozo", label: "Mozo" },
     { href: "/admin", label: "Admin" },
@@ -59,16 +62,12 @@ export function DemoShell({
             </div>
           </div>
 
-          <nav className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <nav className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
             {links.map((link) => {
               const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
 
               return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`role-access ${active ? "role-access-active" : ""}`}
-                >
+                <Link key={link.href} href={link.href} className={`role-access ${active ? "role-access-active" : ""}`}>
                   <span className="font-display text-3xl uppercase leading-none tracking-[0.08em]">
                     {link.label}
                   </span>
@@ -78,6 +77,7 @@ export function DemoShell({
           </nav>
         </header>
 
+        {topBarSlot ? <div className="mt-4">{topBarSlot}</div> : null}
         <main className="mt-6 flex-1">{children}</main>
       </div>
     </div>

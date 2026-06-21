@@ -12,6 +12,12 @@ export function AdminScreen() {
       title="Administrador"
       subtitle="Esta pantalla resume el estado general del local para mostrar el valor del sistema de cara a una presentacion o demo ejecutiva."
       trafficLevel={state.trafficLevel}
+      navLinks={[
+        { href: "/", label: "Inicio" },
+        { href: "/hornero", label: "Cocina" },
+        { href: "/mozo", label: "Mozo" },
+        { href: "/admin", label: "Admin" },
+      ]}
     >
       <div className="space-y-6">
         <KpiStrip

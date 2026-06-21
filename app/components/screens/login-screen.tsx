@@ -9,36 +9,43 @@ export function LoginScreen() {
 
   return (
     <DemoShell
-      title="Control central"
-      subtitle="Elige un rol de demostracion y entra directo al flujo. No hay login real: el objetivo es presentar el sistema integral de Pizza Express con estados compartidos."
+      title="Acceso demo"
+      subtitle="Esta version se enfoca en una presentacion funcional. El acceso principal es el invitado; cocina, mozo y administrador quedan disponibles como paneles separados para mostrar el flujo completo."
       trafficLevel={state.trafficLevel}
+      navLinks={[
+        { href: "/", label: "Inicio" },
+        { href: "/cliente", label: "Invitado" },
+        { href: "/hornero", label: "Hornero" },
+        { href: "/mozo", label: "Mozo" },
+        { href: "/admin", label: "Admin" },
+      ]}
     >
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <SectionCard eyebrow="Accesos" title="Ingreso por rol">
+        <SectionCard eyebrow="Ingreso" title="Elegir rol">
           <div className="grid gap-4 md:grid-cols-2">
             {[
               {
-                title: "Cliente",
-                copy: "Revisa afluencia, elige mesa, arma el pedido, paga y sigue el avance.",
+                title: "Entrar como invitado",
+                copy: "Pide nombre, muestra mesas, catalogo, pago simulado y sala de espera con juego y puntos.",
                 href: "/cliente",
               },
               {
-                title: "Hornero",
-                copy: "Gestiona cola de pedidos, cambia estados y vigila tiempos estimados.",
+                title: "Entrar como cocina",
+                copy: "Ve los pedidos activos y cambia su estado para empujar el avance de la pizza.",
                 href: "/hornero",
               },
               {
-                title: "Mozo",
-                copy: "Controla mesas, verifica pedidos listos y marca los servidos.",
+                title: "Entrar como mozo",
+                copy: "Controla mesas, revisa pedidos listos y marca cuando la orden ya fue servida.",
                 href: "/mozo",
               },
               {
-                title: "Admin",
-                copy: "Consulta estadisticas globales para una presentacion ejecutiva del demo.",
+                title: "Entrar como administrador",
+                copy: "Resumen ejecutivo de afluencia, produccion y ocupacion para presentar el sistema.",
                 href: "/admin",
               },
-            ].map((role) => (
-              <article key={role.title} className="module-card">
+            ].map((role, index) => (
+              <article key={role.title} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
                 <h3 className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
                   {role.title}
                 </h3>
@@ -52,14 +59,14 @@ export function LoginScreen() {
         </SectionCard>
 
         <div className="grid gap-6">
-          <SectionCard eyebrow="Estado del demo" title="Resumen operativo">
+          <SectionCard eyebrow="Resumen" title="Demo lista para mostrar">
             <div className="space-y-4">
               <div className="module-card">
                 <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
-                  Flujo completo listo
+                  Flujo principal enfocado
                 </p>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  Cliente reserva mesa, genera pedido, paga y sigue el estado. Hornero y mozo actualizan el mismo pedido desde sus paneles.
+                  Invitado entra, pone nombre, reserva mesa, arma pedido, paga y espera con seguimiento visible.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">

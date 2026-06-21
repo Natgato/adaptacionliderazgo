@@ -42,6 +42,8 @@ type DemoState = {
   tables: Table[];
   menu: MenuItem[];
   orders: Order[];
+  guestName: string;
+  rewardPoints: number;
   selectedTableId: string | null;
   cart: CartItem[];
   lastOrderId: string | null;
@@ -62,6 +64,8 @@ type DemoContextValue = {
   stats: DemoStats;
   selectedTable: Table | null;
   lastOrder: Order | null;
+  setGuestName: (name: string) => void;
+  addRewardPoints: (amount: number) => void;
   reserveTable: (tableId: string) => void;
   updateTableStatus: (tableId: string, status: TableStatus) => void;
   addToCart: (itemId: string) => void;
@@ -75,8 +79,7 @@ type DemoContextValue = {
   getOrderTable: (tableId: string) => Table | undefined;
 };
 
-const STORAGE_KEY = "pizza-express-demo-state-v2";
-
+const STORAGE_KEY = "pizza-express-demo-state-v3";
 const ORDER_FLOW: OrderStatus[] = ["recibido", "preparacion", "horno", "listo", "servido"];
 
 const MENU_ITEMS: MenuItem[] = [
@@ -211,14 +214,8 @@ function computeTrafficLevel(tables: Table[], orders: Order[]): TrafficLevel {
   const activeOrders = orders.filter((order) => order.status !== "servido").length;
   const pressure = busyTables + activeOrders;
 
-  if (pressure >= 10) {
-    return "alta";
-  }
-
-  if (pressure >= 6) {
-    return "concurrido";
-  }
-
+  if (pressure >= 10) return "alta";
+  if (pressure >= 6) return "concurrido";
   return "tranquilo";
 }
 
@@ -231,6 +228,8 @@ function createInitialState(): DemoState {
     tables,
     menu: MENU_ITEMS,
     orders,
+    guestName: "",
+    rewardPoints: 0,
     selectedTableId: null,
     cart: [],
     lastOrderId: null,
@@ -243,12 +242,7 @@ function loadState(): DemoState {
   }
 
   const stored = window.localStorage.getItem(STORAGE_KEY);
-
-  if (!stored) {
-    return createInitialState();
-  }
-
-  return JSON.parse(stored) as DemoState;
+  return stored ? (JSON.parse(stored) as DemoState) : createInitialState();
 }
 
 function calculateTotal(cart: CartItem[], menu: MenuItem[]) {
@@ -294,6 +288,14 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const lastOrder = state.orders.find((order) => order.id === state.lastOrderId) ?? null;
 
   const syncTraffic = (tables: Table[], orders: Order[]) => computeTrafficLevel(tables, orders);
+
+  const setGuestName = (name: string) => {
+    setState((current) => ({ ...current, guestName: name }));
+  };
+
+  const addRewardPoints = (amount: number) => {
+    setState((current) => ({ ...current, rewardPoints: current.rewardPoints + amount }));
+  };
 
   const reserveTable = (tableId: string) => {
     setState((current) => {
@@ -346,13 +348,12 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   };
 
   const decreaseCartItem = (itemId: string) => {
-    setState((current) => {
-      const nextCart = current.cart
+    setState((current) => ({
+      ...current,
+      cart: current.cart
         .map((item) => (item.itemId === itemId ? { ...item, quantity: item.quantity - 1 } : item))
-        .filter((item) => item.quantity > 0);
-
-      return { ...current, cart: nextCart };
-    });
+        .filter((item) => item.quantity > 0),
+    }));
   };
 
   const removeCartItem = (itemId: string) => {
@@ -410,19 +411,16 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
 
   const updateOrderStatus = (orderId: string, status: OrderStatus) => {
     setState((current) => {
-      const nextOrders = current.orders.map((order) => {
-        if (order.id !== orderId) {
-          return order;
-        }
+      const nextOrders: Order[] = current.orders.map((order) => {
+        if (order.id !== orderId) return order;
 
         const nextStatusIndex = ORDER_FLOW.indexOf(status);
         const currentStatusIndex = ORDER_FLOW.indexOf(order.status);
-        const etaShift = Math.max(order.etaMinutes - (nextStatusIndex - currentStatusIndex) * 4, 0);
 
         return {
           ...order,
           status,
-          etaMinutes: etaShift,
+          etaMinutes: Math.max(order.etaMinutes - Math.max(nextStatusIndex - currentStatusIndex, 1) * 4, 0),
         };
       });
 
@@ -453,6 +451,8 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
       return {
         ...current,
         tables: nextTables,
+        guestName: current.guestName,
+        rewardPoints: current.rewardPoints,
         selectedTableId: null,
         cart: [],
         lastOrderId: null,
@@ -461,11 +461,13 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const value = {
+  const value: DemoContextValue = {
     state,
     stats,
     selectedTable,
     lastOrder,
+    setGuestName,
+    addRewardPoints,
     reserveTable,
     updateTableStatus,
     addToCart,
@@ -477,7 +479,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
     resetClientFlow,
     getMenuItem: (itemId: string) => state.menu.find((item) => item.id === itemId),
     getOrderTable: (tableId: string) => state.tables.find((table) => table.id === tableId),
-  } satisfies DemoContextValue;
+  };
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;
 }
