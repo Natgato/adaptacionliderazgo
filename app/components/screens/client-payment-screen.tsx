@@ -47,7 +47,7 @@ export function ClientPaymentScreen() {
         </div>
       }
     >
-      <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <SectionCard eyebrow="Paso 4" title="Pago simulado">
           {!selectedTable || state.cart.length === 0 ? (
             <div className="module-card">
@@ -81,7 +81,7 @@ export function ClientPaymentScreen() {
                   Confirmar y generar pedido
                 </p>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  Al confirmar, el sistema crea un pedido nuevo con estado inicial &quot;Pedido recibido&quot; y lo envía al panel del hornero.
+                  Al confirmar, el sistema crea un pedido nuevo con estado inicial &quot;Pedido recibido&quot; y lo envia al panel del hornero.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <button type="button" className="action-pill bg-white text-slate-950" onClick={handlePayment}>

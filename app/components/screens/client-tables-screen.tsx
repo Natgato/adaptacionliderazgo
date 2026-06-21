@@ -34,7 +34,7 @@ export function ClientTablesScreen() {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <KpiStrip
           items={[
             { label: "Nivel del local", value: state.trafficLevel === "alta" ? "Alta demanda" : state.trafficLevel === "concurrido" ? "Dia concurrido" : "Dia tranquilo" },
@@ -49,7 +49,7 @@ export function ClientTablesScreen() {
           title="Elegir mesa"
           action={<PrimaryButton href="/cliente/menu" disabled={!selectedTable}>Continuar al menu</PrimaryButton>}
         >
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
             {state.tables.map((table, index) => (
               <div key={table.id} className="panel-enter" style={{ ["--i" as string]: index }}>
                 <TableCard
@@ -76,7 +76,7 @@ export function ClientTablesScreen() {
                   Reserva confirmada
                 </p>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  La mesa quedó apartada para el demo. Ahora puedes pasar al catálogo y construir el pedido completo.
+                  La mesa quedó apartada para el demo. Ahora puedes pasar al catalogo y construir el pedido completo.
                 </p>
               </div>
               <div className="module-card panel-enter" style={{ ["--i" as string]: 1 }}>

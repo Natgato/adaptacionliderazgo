@@ -12,6 +12,7 @@ export function LoginScreen() {
       title="Acceso demo"
       subtitle="Esta version se enfoca en una presentacion funcional. El acceso principal es el invitado; cocina, mozo y administrador quedan disponibles como paneles separados para mostrar el flujo completo."
       trafficLevel={state.trafficLevel}
+      mobileMinimal
       navLinks={[
         { href: "/", label: "Inicio" },
         { href: "/cliente", label: "Invitado" },
@@ -46,7 +47,7 @@ export function LoginScreen() {
               },
             ].map((role, index) => (
               <article key={role.title} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
-                <h3 className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
+                <h3 className="font-display text-3xl uppercase leading-none tracking-[0.08em] text-white sm:text-4xl">
                   {role.title}
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{role.copy}</p>

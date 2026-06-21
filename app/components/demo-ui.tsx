@@ -152,9 +152,8 @@ type RewardItem = {
 };
 
 const REWARDS: RewardItem[] = [
-  { id: "r1", name: "Borde crocante", cost: 120, bonus: "+ sabor", note: "Mejora tu siguiente pizza sin pagar extra." },
-  { id: "r2", name: "Bebida fria", cost: 180, bonus: "+ refresco", note: "Canje simple para acompanar una porcion o combo." },
-  { id: "r3", name: "Extra queso", cost: 240, bonus: "+ intensidad", note: "Sube el nivel del siguiente pedido con doble queso." },
+  { id: "r1", name: "Descuento ligero", cost: 200, bonus: "- proxima compra", note: "200 puntos: descuento pequeño para una próxima compra." },
+  { id: "r2", name: "Descuento mayor", cost: 300, bonus: "- mas ahorro", note: "300 puntos: descuento mayor para una próxima compra." },
 ];
 
 export function RewardsPanel({ points }: { points: number }) {
@@ -167,7 +166,7 @@ export function RewardsPanel({ points }: { points: number }) {
 
   return (
     <>
-      <button type="button" className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100" onClick={() => setOpen(true)}>
+      <button type="button" className="action-pill w-full sm:w-auto bg-[rgba(20,36,86,0.85)] text-cyan-100" onClick={() => setOpen(true)}>
         Ver recompensas
       </button>
       {open ? (
@@ -196,12 +195,12 @@ export function RewardsPanel({ points }: { points: number }) {
                         style={{ ["--i" as string]: index }}
                       >
                         <div className="flex-1 text-left">
-                          <p className="font-display text-4xl uppercase leading-none tracking-[0.06em] text-white">{reward.name}</p>
+                          <p className="font-display text-3xl uppercase leading-none tracking-[0.06em] text-white sm:text-4xl">{reward.name}</p>
                           <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.22em] text-cyan-100/80">
                             {reward.bonus}
                           </p>
                         </div>
-                        <span className="rounded-full bg-black/80 px-4 py-2 font-mono text-sm uppercase tracking-[0.22em] text-white">
+                        <span className="rounded-full bg-black/80 px-4 py-2 font-mono text-xs uppercase tracking-[0.22em] text-white sm:text-sm">
                           {reward.cost}
                         </span>
                       </button>
@@ -215,7 +214,7 @@ export function RewardsPanel({ points }: { points: number }) {
                 <div className="relative flex items-start justify-between gap-4">
                   <div>
                     <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Recompensa seleccionada</p>
-                    <p className="mt-2 font-display text-6xl uppercase leading-none tracking-[0.08em] text-white">
+                    <p className="mt-2 font-display text-5xl uppercase leading-none tracking-[0.08em] text-white sm:text-6xl">
                       {selectedReward.name}
                     </p>
                   </div>
@@ -232,8 +231,8 @@ export function RewardsPanel({ points }: { points: number }) {
                     <p className="mt-3 text-sm leading-6 text-slate-300">{selectedReward.note}</p>
                     <div className="mt-6 rounded-sm border border-white/10 bg-black/20 px-4 py-4">
                       <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Estado del canje</p>
-                      <p className="mt-2 font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
-                        {points >= selectedReward.cost ? "Disponible" : "Sigue esperando"}
+                      <p className="mt-2 font-display text-3xl uppercase leading-none tracking-[0.08em] text-white sm:text-4xl">
+                        Proximamente
                       </p>
                     </div>
                   </div>
@@ -243,11 +242,15 @@ export function RewardsPanel({ points }: { points: number }) {
                       Un panel de recompensas pensado para la sala de espera: claro, rapido de explicar y facil de mostrar en presentacion.
                     </p>
                     <div className="mt-6 flex flex-wrap gap-3">
-                      <StatusChip
-                        label={points >= selectedReward.cost ? "Puntos suficientes" : "Aun no alcanza"}
-                        tone={points >= selectedReward.cost ? "emerald" : "yellow"}
-                      />
-                      <StatusChip label="Demo sin canje real" tone="white" />
+                      <StatusChip label={points >= selectedReward.cost ? "Ya puedes aspirar al premio" : "Sigue acumulando"} tone={points >= selectedReward.cost ? "emerald" : "yellow"} />
+                      <StatusChip label="Canje disponible proximamente" tone="white" />
+                      <button
+                        type="button"
+                        disabled
+                        className="action-pill cursor-not-allowed opacity-50 bg-white text-slate-950"
+                      >
+                        Canjear
+                      </button>
                     </div>
                   </div>
                 </div>

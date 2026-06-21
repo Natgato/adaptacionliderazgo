@@ -96,7 +96,7 @@ body::before {
 
 .role-access {
   display: flex;
-  min-height: 48px;
+  min-height: 52px;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -213,6 +213,14 @@ body::before {
   animation: status-pulse 1.4s ease-in-out infinite;
 }
 
+.shell-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.shell-nav {
+  scrollbar-width: none;
+}
+
 @keyframes panel-enter {
   from {
     opacity: 0;
@@ -262,5 +270,74 @@ input:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .hud-panel::after {
+    width: 92px;
+    inset: auto -8% 10px auto;
+  }
+
+  .action-pill {
+    min-height: 52px;
+    width: 100%;
+    justify-content: center;
+    padding-inline: 0.9rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+  }
+
+  .role-access {
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+  }
+
+  .mobile-shell-minimal .shell-subtitle,
+  .mobile-shell-minimal .shell-traffic {
+    display: none;
+  }
+
+  .mobile-shell-minimal nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .mobile-shell-minimal .role-access {
+    min-width: 0;
+  }
+
+  .top-strip {
+    padding: 0.75rem;
+  }
+
+  .top-strip .info-chip:nth-child(1),
+  .top-strip .info-chip:nth-child(4) {
+    display: none;
+  }
+
+  .info-chip {
+    min-height: 58px;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .info-chip-value {
+    font-size: 1.55rem;
+    letter-spacing: 0.05em;
+  }
+
+  .reward-panel {
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .reward-row {
+    min-height: 66px;
+    padding: 0.75rem 0.85rem;
+  }
+
+  .module-card {
+    padding: 0.9rem;
   }
 }

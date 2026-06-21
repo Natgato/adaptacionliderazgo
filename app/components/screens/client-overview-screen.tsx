@@ -25,6 +25,7 @@ export function ClientOverviewScreen() {
       title="Invitado"
       subtitle="El cliente entra sin cuenta real. Solo deja su nombre y pasa a una experiencia exclusiva de compra y espera."
       trafficLevel={state.trafficLevel}
+      mobileMinimal
       navLinks={[
         { href: "/", label: "Inicio" },
         { href: "/cliente", label: "Nombre" },
@@ -34,7 +35,7 @@ export function ClientOverviewScreen() {
         { href: "/cliente/seguimiento", label: "Sala" },
       ]}
     >
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <SectionCard eyebrow="Paso 1" title="Entrar como invitado">
           <div className="space-y-4">
             <div className="module-card panel-enter">

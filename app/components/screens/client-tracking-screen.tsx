@@ -21,7 +21,7 @@ export function ClientTrackingScreen() {
   useEffect(() => {
     if (!lastOrder || lastOrder.status === "servido") return;
 
-    const pointsTimer = window.setInterval(() => addRewardPoints(15), 5000);
+    const pointsTimer = window.setInterval(() => addRewardPoints(5), 12000);
     return () => window.clearInterval(pointsTimer);
   }, [addRewardPoints, lastOrder]);
 
@@ -76,15 +76,15 @@ export function ClientTrackingScreen() {
           </div>
         </SectionCard>
       ) : (
-        <div className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6 xl:grid-cols-[0.9fr_1.1fr]">
             <SectionCard eyebrow="Sala activa" title={`Esperando ${state.guestName || "invitado"}`}>
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 <div className="module-card panel-enter">
                   <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-300">Pedido</p>
                   <p className="mt-2 font-display text-5xl uppercase leading-none tracking-[0.08em] text-white">{lastOrder.id}</p>
                   <p className="mt-3 text-sm leading-6 text-slate-300">
-                    Mientras esperas tu pizza, acumulas puntos para futuros descuentos dentro del sistema demo.
+                    Acumulas 5 puntos por cada minuto de espera.
                   </p>
                 </div>
 
@@ -112,21 +112,44 @@ export function ClientTrackingScreen() {
             </SectionCard>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.1fr_0.9fr]">
             <SectionCard eyebrow="Actividad" title="Juego en espera">
               <div className="module-card panel-enter">
                 <p className="mb-4 text-sm leading-6 text-slate-300">
                   El cliente puede entretenerse mientras el pedido avanza. El juego se muestra como actividad integrada dentro de la sala de espera.
                 </p>
-                <div className="overflow-hidden border border-white/10 bg-black/30 p-3">
-                  <iframe
-                    title="Pizza Delivery Demastered"
-                    height="167"
-                    width="552"
-                    src="https://itch.io/embed/891896"
-                    className="mx-auto max-w-full"
-                  />
+                <div className="overflow-hidden border border-white/10 bg-black/30 p-2 sm:p-3">
+                  <div className="relative w-full overflow-hidden pb-[56%]">
+                    <iframe
+                      title="Pizza Delivery Demastered"
+                      src="https://itch.io/embed/891896"
+                      className="absolute inset-0 h-full w-full"
+                    />
+                  </div>
                 </div>
+              </div>
+            </SectionCard>
+
+            <SectionCard eyebrow="Premios" title="Canjes visibles">
+              <div className="grid gap-3">
+                {[
+                  "200 puntos: descuento pequeño para una próxima compra.",
+                  "300 puntos: descuento mayor para una próxima compra.",
+                ].map((reward, index) => (
+                  <div key={reward} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
+                    <p className="font-display text-3xl uppercase leading-none tracking-[0.06em] text-white">
+                      {reward.split(":")[0]}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-slate-300">{reward}</p>
+                    <button
+                      type="button"
+                      disabled
+                      className="mt-4 action-pill cursor-not-allowed opacity-50 bg-white text-slate-950"
+                    >
+                      Canje disponible proximamente
+                    </button>
+                  </div>
+                ))}
               </div>
             </SectionCard>
 
@@ -137,7 +160,7 @@ export function ClientTrackingScreen() {
                     Fin del recorrido
                   </p>
                   <p className="mt-3 text-sm leading-6 text-slate-300">
-                    Cuando termine la presentación puedes reiniciar solo el flujo del invitado sin tocar el resto de pedidos simulados del sistema.
+                    Cuando termine la presentacion puedes reiniciar solo el flujo del invitado sin tocar el resto de pedidos simulados del sistema.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">

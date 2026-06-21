@@ -51,7 +51,7 @@ export function ClientMenuScreen() {
         </div>
       }
     >
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <SectionCard eyebrow="Paso 3" title="Catalogo simulado">
           {!selectedTable ? (
             <div className="module-card">
@@ -75,7 +75,7 @@ export function ClientMenuScreen() {
                   <h3 className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
                     {categoryLabels[category as keyof typeof grouped]}
                   </h3>
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                     {items.map((item, index) => (
                       <article key={item.id} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
                         <p className="font-display text-3xl uppercase leading-none tracking-[0.06em] text-white">{item.name}</p>
