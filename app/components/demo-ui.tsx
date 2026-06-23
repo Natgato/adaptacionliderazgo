@@ -152,8 +152,8 @@ type RewardItem = {
 };
 
 const REWARDS: RewardItem[] = [
-  { id: "r1", name: "Descuento ligero", cost: 200, bonus: "- proxima compra", note: "200 puntos: descuento pequeño para una próxima compra." },
-  { id: "r2", name: "Descuento mayor", cost: 300, bonus: "- mas ahorro", note: "300 puntos: descuento mayor para una próxima compra." },
+  { id: "r1", name: "Descuento ligero", cost: 200, bonus: "- proxima compra", note: "200 puntos: descuento pequeno para una proxima compra." },
+  { id: "r2", name: "Descuento mayor", cost: 300, bonus: "- mas ahorro", note: "300 puntos: descuento mayor para una proxima compra." },
 ];
 
 export function RewardsPanel({ points }: { points: number }) {
@@ -166,7 +166,7 @@ export function RewardsPanel({ points }: { points: number }) {
 
   return (
     <>
-      <button type="button" className="action-pill w-full sm:w-auto bg-[rgba(20,36,86,0.85)] text-cyan-100" onClick={() => setOpen(true)}>
+      <button type="button" className="action-pill action-pill-secondary w-full sm:w-auto bg-[rgba(20,36,86,0.85)] text-cyan-100" onClick={() => setOpen(true)}>
         Ver recompensas
       </button>
       {open ? (
@@ -218,7 +218,7 @@ export function RewardsPanel({ points }: { points: number }) {
                       {selectedReward.name}
                     </p>
                   </div>
-                  <button type="button" className="action-pill bg-white text-slate-950" onClick={() => setOpen(false)}>
+                  <button type="button" className="action-pill action-pill-primary bg-white text-slate-950" onClick={() => setOpen(false)}>
                     Cerrar
                   </button>
                 </div>
@@ -247,7 +247,7 @@ export function RewardsPanel({ points }: { points: number }) {
                       <button
                         type="button"
                         disabled
-                        className="action-pill cursor-not-allowed opacity-50 bg-white text-slate-950"
+                        className="action-pill action-pill-primary cursor-not-allowed opacity-50 bg-white text-slate-950"
                       >
                         Canjear
                       </button>
@@ -328,7 +328,9 @@ export function PrimaryButton({
   variant?: "solid" | "ghost";
 }) {
   const className = `action-pill ${
-    variant === "solid" ? "bg-white text-slate-950" : "bg-[rgba(20,36,86,0.85)] text-cyan-100"
+    variant === "solid"
+      ? "action-pill-primary bg-white text-slate-950"
+      : "action-pill-secondary bg-[rgba(20,36,86,0.85)] text-cyan-100"
   } ${disabled ? "pointer-events-none opacity-40" : ""}`;
 
   if (href) {
@@ -346,9 +348,42 @@ export function PrimaryButton({
   );
 }
 
-export function OrderProgress({ status }: { status: OrderStatus }) {
+export function OrderProgress({ status, compact = false }: { status: OrderStatus; compact?: boolean }) {
   const steps: OrderStatus[] = ["recibido", "preparacion", "horno", "listo", "servido"];
   const activeIndex = steps.indexOf(status);
+
+  if (compact) {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-5 gap-2">
+          {steps.map((step, index) => {
+            const done = index < activeIndex;
+            const current = index === activeIndex;
+
+            return (
+              <div key={step} className="space-y-2">
+                <div
+                  className={`h-2.5 w-full rounded-full transition-colors duration-200 ${
+                    done
+                      ? "bg-cyan-300 shadow-[0_0_18px_rgba(115,242,255,0.42)]"
+                      : current
+                        ? "status-pulse bg-yellow-300"
+                        : "bg-white/12"
+                  }`}
+                />
+                <p className={`font-mono text-[0.58rem] uppercase tracking-[0.16em] ${current ? "text-white" : "text-slate-400"}`}>
+                  {orderLabels[step]}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <p className="font-display text-3xl uppercase leading-none tracking-[0.07em] text-cyan-100 sm:text-4xl">
+          {orderLabels[status]}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -475,7 +510,7 @@ export function OrderCard({
         <div>
           <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">{order.id}</p>
           <p className="mt-2 text-sm leading-6 text-slate-300">
-            {table?.name ?? "Mesa desconocida"} · registrado a las {order.createdAt} · ETA {order.etaMinutes} min
+            {table?.name ?? "Mesa desconocida"} / registrado a las {order.createdAt} / ETA {order.etaMinutes} min
           </p>
         </div>
         <StatusChip label={orderLabels[order.status]} tone={orderTone(order.status)} />

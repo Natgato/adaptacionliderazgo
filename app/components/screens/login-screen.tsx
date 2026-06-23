@@ -12,22 +12,28 @@ export function LoginScreen() {
       title="Acceso demo"
       subtitle="Esta version se enfoca en una presentacion funcional. El acceso principal es el invitado; cocina, mozo y administrador quedan disponibles como paneles separados para mostrar el flujo completo."
       trafficLevel={state.trafficLevel}
-      mobileMinimal
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/cliente", label: "Invitado" },
-        { href: "/hornero", label: "Hornero" },
-        { href: "/mozo", label: "Mozo" },
-        { href: "/admin", label: "Admin" },
-      ]}
+      headerMode="hidden"
+      mainClassName="flex items-center"
     >
-      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <SectionCard eyebrow="Ingreso" title="Elegir rol">
-          <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid w-full gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <section className="hud-panel px-5 py-6 sm:px-7 sm:py-8">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-cyan-200/75">
+              Pizza Express / Inicio
+            </p>
+            <h1 className="mt-4 font-display text-[4.2rem] uppercase leading-none tracking-[0.06em] text-white sm:text-[5.8rem]">
+              Elige tu acceso
+            </h1>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
+              Una sola entrada para la demo. Cada perfil abre una vista separada y limpia, sin mezclar cocina, salon ni seguimiento del cliente.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[
               {
                 title: "Entrar como invitado",
-                copy: "Pide nombre, muestra mesas, catalogo, pago simulado y sala de espera con juego y puntos.",
+                copy: "Flujo completo para cliente: nombre, mesa, pedido, pago simulado y sala de espera con juego.",
                 href: "/cliente",
               },
               {
@@ -57,17 +63,15 @@ export function LoginScreen() {
               </article>
             ))}
           </div>
-        </SectionCard>
+        </section>
 
         <div className="grid gap-6">
-          <SectionCard eyebrow="Resumen" title="Demo lista para mostrar">
+          <SectionCard eyebrow="Resumen demo" title="Estado del local">
             <div className="space-y-4">
               <div className="module-card">
-                <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
-                  Flujo principal enfocado
-                </p>
+                <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">Presentacion funcional</p>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  Invitado entra, pone nombre, reserva mesa, arma pedido, paga y espera con seguimiento visible.
+                  Invitado entra, pone nombre, reserva mesa, arma pedido, paga y espera con seguimiento visible mientras cocina y mozo actualizan el estado.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">

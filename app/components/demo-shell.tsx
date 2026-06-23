@@ -18,6 +18,9 @@ export function DemoShell({
   navLinks,
   topBarSlot,
   mobileMinimal,
+  headerMode = "full",
+  headerAction,
+  mainClassName = "",
   children,
 }: {
   title: string;
@@ -26,6 +29,9 @@ export function DemoShell({
   navLinks?: Array<{ href: string; label: string }>;
   topBarSlot?: React.ReactNode;
   mobileMinimal?: boolean;
+  headerMode?: "full" | "minimal" | "hidden";
+  headerAction?: React.ReactNode;
+  mainClassName?: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -44,43 +50,58 @@ export function DemoShell({
       <AmbientBlueprint />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 py-3 sm:px-6 sm:py-5 lg:px-10">
-        <header className={`hud-panel flex flex-col gap-4 px-4 py-4 sm:px-5 sm:py-5 ${mobileMinimal ? "mobile-shell-minimal" : ""}`}>
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-2">
-              <p className="font-mono text-[0.62rem] uppercase tracking-[0.3em] text-cyan-200/75 sm:text-[0.7rem] sm:tracking-[0.35em]">
-                Pizza Express / Demo funcional
-              </p>
-              <h1 className="font-display text-[2.9rem] uppercase leading-none tracking-[0.06em] text-white sm:text-6xl sm:tracking-[0.08em]">
+        {headerMode === "full" ? (
+          <header className={`hud-panel flex flex-col gap-4 px-4 py-4 sm:px-5 sm:py-5 ${mobileMinimal ? "mobile-shell-minimal" : ""}`}>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="space-y-2">
+                <p className="font-mono text-[0.62rem] uppercase tracking-[0.3em] text-cyan-200/75 sm:text-[0.7rem] sm:tracking-[0.35em]">
+                  Pizza Express / Demo funcional
+                </p>
+                <h1 className="font-display text-[2.9rem] uppercase leading-none tracking-[0.06em] text-white sm:text-6xl sm:tracking-[0.08em]">
+                  {title}
+                </h1>
+                <p className="shell-subtitle max-w-3xl text-sm leading-6 text-slate-200/82 sm:text-base">{subtitle}</p>
+              </div>
+
+              <div className="shell-traffic min-w-0 rounded-sm border border-white/10 bg-white/5 px-4 py-3 sm:min-w-56">
+                <p className="font-mono text-[0.62rem] uppercase tracking-[0.26em] text-slate-300">Afluencia</p>
+                <p className="mt-1 font-display text-3xl uppercase leading-none tracking-[0.08em] text-cyan-100 sm:text-4xl">
+                  {trafficCopy[trafficLevel]}
+                </p>
+              </div>
+            </div>
+
+            <nav className="shell-nav flex gap-2 overflow-x-auto pb-1 sm:grid sm:overflow-visible sm:pb-0 xl:grid-cols-6">
+              {links.map((link) => {
+                const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+                return (
+                  <Link key={link.href} href={link.href} className={`role-access min-w-max sm:min-w-0 ${active ? "role-access-active" : ""}`}>
+                    <span className="font-display text-[1.9rem] uppercase leading-none tracking-[0.07em] sm:text-3xl sm:tracking-[0.08em]">
+                      {link.label}
+                    </span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </header>
+        ) : null}
+
+        {headerMode === "minimal" ? (
+          <header className="hud-panel demo-compact-header flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
+            <div className="min-w-0">
+              <p className="font-mono text-[0.62rem] uppercase tracking-[0.26em] text-cyan-200/70">Pizza Express</p>
+              <h1 className="mt-1 truncate font-display text-[2.1rem] uppercase leading-none tracking-[0.07em] text-white sm:text-5xl">
                 {title}
               </h1>
-              <p className="shell-subtitle max-w-3xl text-sm leading-6 text-slate-200/82 sm:text-base">{subtitle}</p>
+              <p className="mt-1 hidden text-sm leading-6 text-slate-300/80 sm:block">{subtitle}</p>
             </div>
+            {headerAction ? <div className="flex shrink-0 items-center gap-2">{headerAction}</div> : null}
+          </header>
+        ) : null}
 
-            <div className="shell-traffic min-w-0 rounded-sm border border-white/10 bg-white/5 px-4 py-3 sm:min-w-56">
-              <p className="font-mono text-[0.62rem] uppercase tracking-[0.26em] text-slate-300">Afluencia</p>
-              <p className="mt-1 font-display text-3xl uppercase leading-none tracking-[0.08em] text-cyan-100 sm:text-4xl">
-                {trafficCopy[trafficLevel]}
-              </p>
-            </div>
-          </div>
-
-          <nav className="shell-nav flex gap-2 overflow-x-auto pb-1 sm:grid sm:overflow-visible sm:pb-0 xl:grid-cols-6">
-            {links.map((link) => {
-              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-
-              return (
-                <Link key={link.href} href={link.href} className={`role-access min-w-max sm:min-w-0 ${active ? "role-access-active" : ""}`}>
-                  <span className="font-display text-[1.9rem] uppercase leading-none tracking-[0.07em] sm:text-3xl sm:tracking-[0.08em]">
-                    {link.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </nav>
-        </header>
-
-        {topBarSlot ? <div className="mt-4">{topBarSlot}</div> : null}
-        <main className="mt-6 flex-1">{children}</main>
+        {topBarSlot ? <div className={headerMode === "hidden" ? "mt-0" : "mt-4"}>{topBarSlot}</div> : null}
+        <main className={`${headerMode === "hidden" ? "mt-0" : "mt-6"} flex-1 ${mainClassName}`.trim()}>{children}</main>
       </div>
     </div>
   );

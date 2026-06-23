@@ -94,6 +94,21 @@ body::before {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
+.action-pill-primary {
+  border-color: rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 22px rgba(115, 242, 255, 0.28),
+    0 18px 36px rgba(0, 0, 0, 0.26);
+  animation: cta-pulse 2.1s ease-in-out infinite;
+}
+
+.action-pill-secondary {
+  box-shadow:
+    inset 0 0 0 1px rgba(115, 242, 255, 0.08),
+    0 12px 24px rgba(0, 0, 0, 0.18);
+}
+
 .role-access {
   display: flex;
   min-height: 52px;
@@ -209,6 +224,49 @@ body::before {
   color: #08112c !important;
 }
 
+.demo-compact-header {
+  backdrop-filter: blur(10px);
+}
+
+.featured-game-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(115, 242, 255, 0.22);
+  background:
+    linear-gradient(135deg, rgba(19, 42, 122, 0.92) 0%, rgba(6, 15, 48, 0.98) 58%, rgba(3, 8, 24, 0.98) 100%);
+  padding: 1rem;
+  box-shadow:
+    0 0 0 1px rgba(115, 242, 255, 0.06),
+    0 28px 60px rgba(0, 0, 0, 0.34),
+    0 0 42px rgba(41, 108, 255, 0.2);
+}
+
+.featured-game-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(110deg, transparent 0%, rgba(115, 242, 255, 0.13) 55%, transparent 100%);
+}
+
+.featured-game-copy,
+.featured-game-frame {
+  position: relative;
+  z-index: 1;
+}
+
+.featured-game-frame {
+  margin-top: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.24);
+  padding: 0.5rem;
+  box-shadow:
+    0 0 0 1px rgba(115, 242, 255, 0.08),
+    0 0 24px rgba(115, 242, 255, 0.12);
+}
+
 .status-pulse {
   animation: status-pulse 1.4s ease-in-out infinite;
 }
@@ -249,6 +307,21 @@ body::before {
   }
   50% {
     box-shadow: 0 0 0 8px rgba(255, 226, 77, 0);
+  }
+}
+
+@keyframes cta-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.18),
+      0 0 18px rgba(115, 242, 255, 0.24),
+      0 18px 36px rgba(0, 0, 0, 0.24);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.28),
+      0 0 34px rgba(115, 242, 255, 0.38),
+      0 20px 40px rgba(0, 0, 0, 0.28);
   }
 }
 
@@ -317,6 +390,14 @@ input:focus-visible {
     display: none;
   }
 
+  .demo-compact-header {
+    align-items: flex-start;
+  }
+
+  .demo-compact-header h1 {
+    font-size: 2.15rem;
+  }
+
   .info-chip {
     min-height: 58px;
     padding: 0.7rem 0.8rem;
@@ -339,5 +420,14 @@ input:focus-visible {
 
   .module-card {
     padding: 0.9rem;
+  }
+
+  .featured-game-card {
+    padding: 0.85rem;
+  }
+
+  .featured-game-frame {
+    margin-top: 0.85rem;
+    padding: 0.35rem;
   }
 }

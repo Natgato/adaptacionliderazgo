@@ -1,7 +1,7 @@
 "use client";
 
 import { DemoShell } from "@/app/components/demo-shell";
-import { KpiStrip, SectionCard, StatusChip, trafficLabels } from "@/app/components/demo-ui";
+import { KpiStrip, PrimaryButton, SectionCard, StatusChip, trafficLabels } from "@/app/components/demo-ui";
 import { useDemo } from "@/app/components/demo-provider";
 
 export function AdminScreen() {
@@ -10,27 +10,23 @@ export function AdminScreen() {
   return (
     <DemoShell
       title="Administrador"
-      subtitle="Esta pantalla resume el estado general del local para mostrar el valor del sistema de cara a una presentacion o demo ejecutiva."
+      subtitle="Vista simple de supervision para explicar el impacto del sistema."
       trafficLevel={state.trafficLevel}
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/hornero", label: "Cocina" },
-        { href: "/mozo", label: "Mozo" },
-        { href: "/admin", label: "Admin" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <KpiStrip
           items={[
             { label: "Pedidos activos", value: stats.activeOrders },
             { label: "Mesas disponibles", value: stats.tablesAvailable },
             { label: "Mesas ocupadas", value: stats.tablesOccupied },
-            { label: "Nivel de afluencia", value: trafficLabels[state.trafficLevel] },
+            { label: "Afluencia", value: trafficLabels[state.trafficLevel] },
           ]}
         />
 
-        <div className="grid gap-6 xl:grid-cols-3">
-          <SectionCard eyebrow="Pedidos" title="Produccion">
+        <div className="grid gap-4 sm:gap-6 xl:grid-cols-3">
+          <SectionCard eyebrow="Produccion" title="Pedidos">
             <div className="flex flex-wrap gap-3">
               <StatusChip label={`En preparacion ${stats.ordersInPreparation}`} tone="cyan" />
               <StatusChip label={`En horno ${stats.ordersInOven}`} tone="yellow" />
@@ -52,7 +48,7 @@ export function AdminScreen() {
                 {stats.averageEta} min
               </p>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                Tiempo promedio estimado de los pedidos que siguen activos dentro del sistema.
+                Tiempo promedio estimado de los pedidos activos dentro del sistema.
               </p>
             </div>
           </SectionCard>

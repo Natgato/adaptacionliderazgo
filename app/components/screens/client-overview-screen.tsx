@@ -25,18 +25,11 @@ export function ClientOverviewScreen() {
       title="Invitado"
       subtitle="El cliente entra sin cuenta real. Solo deja su nombre y pasa a una experiencia exclusiva de compra y espera."
       trafficLevel={state.trafficLevel}
-      mobileMinimal
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/cliente", label: "Nombre" },
-        { href: "/cliente/mesas", label: "Mesas" },
-        { href: "/cliente/menu", label: "Menu" },
-        { href: "/cliente/pago", label: "Pago" },
-        { href: "/cliente/seguimiento", label: "Sala" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
     >
       <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <SectionCard eyebrow="Paso 1" title="Entrar como invitado">
+        <SectionCard eyebrow="Acceso invitado" title="Tu nombre para el pedido">
           <div className="space-y-4">
             <div className="module-card panel-enter">
               <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
@@ -60,7 +53,7 @@ export function ClientOverviewScreen() {
             </label>
 
             <div className="flex flex-wrap gap-3">
-              <button type="button" className="action-pill bg-white text-slate-950" onClick={handleContinue}>
+              <button type="button" className="action-pill action-pill-primary bg-white text-slate-950" onClick={handleContinue}>
                 Continuar a mesas
               </button>
               <PrimaryButton href="/" variant="ghost">Volver al inicio</PrimaryButton>
@@ -68,14 +61,13 @@ export function ClientOverviewScreen() {
           </div>
         </SectionCard>
 
-        <SectionCard eyebrow="Que sigue" title="Flujo del invitado">
+        <SectionCard eyebrow="Vista cliente" title="Lo que veras despues">
           <div className="space-y-4">
             {[
-              "1. Poner nombre",
-              "2. Elegir una mesa disponible",
-              "3. Armar el pedido",
-              "4. Confirmar pago simulado",
-              "5. Esperar con juego, puntos y barra de progreso",
+              "Mesa disponible",
+              "Menu y pedido",
+              "Pago simulado",
+              "Sala de espera con juego",
             ].map((item, index) => (
               <div key={item} className="module-card panel-enter" style={{ ["--i" as string]: index }}>
                 <p className="font-display text-3xl uppercase leading-none tracking-[0.06em] text-white">{item}</p>

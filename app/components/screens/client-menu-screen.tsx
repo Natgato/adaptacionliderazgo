@@ -5,7 +5,6 @@ import { DemoShell } from "@/app/components/demo-shell";
 import {
   CartSummary,
   PrimaryButton,
-  RewardsPanel,
   SectionCard,
   StatusChip,
   TopInfoBar,
@@ -28,31 +27,22 @@ export function ClientMenuScreen() {
 
   return (
     <DemoShell
-      title="Invitado / Catalogo"
-      subtitle="Con la mesa ya elegida, el invitado arma el pedido desde un catalogo simulado y revisa el resumen antes del pago."
+      title="Menu"
+      subtitle="Arma el pedido con productos simulados y revisa el resumen antes del pago."
       trafficLevel={state.trafficLevel}
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/cliente", label: "Nombre" },
-        { href: "/cliente/mesas", label: "Mesas" },
-        { href: "/cliente/menu", label: "Menu" },
-        { href: "/cliente/pago", label: "Pago" },
-        { href: "/cliente/seguimiento", label: "Sala" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
       topBarSlot={
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-          <TopInfoBar
-            guestName={state.guestName}
-            points={state.rewardPoints}
-            tableName={selectedTable?.name}
-            orderLabel={lastOrder ? orderLabels[lastOrder.status] : "Pedido en construccion"}
-          />
-          <RewardsPanel points={state.rewardPoints} />
-        </div>
+        <TopInfoBar
+          guestName={state.guestName}
+          points={state.rewardPoints}
+          tableName={selectedTable?.name}
+          orderLabel={lastOrder ? orderLabels[lastOrder.status] : "Pedido en construccion"}
+        />
       }
     >
       <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <SectionCard eyebrow="Paso 3" title="Catalogo simulado">
+        <SectionCard eyebrow="Catalogo" title="Productos disponibles">
           {!selectedTable ? (
             <div className="module-card">
               <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">Falta elegir mesa</p>
@@ -84,7 +74,7 @@ export function ClientMenuScreen() {
                           <span className="font-display text-3xl uppercase leading-none tracking-[0.06em] text-cyan-100">
                             S/ {item.price}
                           </span>
-                          <button type="button" className="action-pill bg-white text-slate-950" onClick={() => addToCart(item.id)}>
+                          <button type="button" className="action-pill action-pill-primary bg-white text-slate-950" onClick={() => addToCart(item.id)}>
                             Agregar
                           </button>
                         </div>

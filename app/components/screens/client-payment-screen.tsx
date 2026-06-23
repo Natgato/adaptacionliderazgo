@@ -5,7 +5,6 @@ import { DemoShell } from "@/app/components/demo-shell";
 import {
   CartSummary,
   PrimaryButton,
-  RewardsPanel,
   SectionCard,
   StatusChip,
   TopInfoBar,
@@ -24,31 +23,22 @@ export function ClientPaymentScreen() {
 
   return (
     <DemoShell
-      title="Invitado / Pago"
-      subtitle="La compra se cierra con un pago simulado. No hay pasarela real: solo confirmacion de demo para generar el pedido."
+      title="Pago"
+      subtitle="Confirma el pago simulado para generar el pedido y enviarlo a cocina."
       trafficLevel={state.trafficLevel}
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/cliente", label: "Nombre" },
-        { href: "/cliente/mesas", label: "Mesas" },
-        { href: "/cliente/menu", label: "Menu" },
-        { href: "/cliente/pago", label: "Pago" },
-        { href: "/cliente/seguimiento", label: "Sala" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
       topBarSlot={
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-          <TopInfoBar
-            guestName={state.guestName}
-            points={state.rewardPoints}
-            tableName={selectedTable?.name}
-            orderLabel={lastOrder ? orderLabels[lastOrder.status] : "Pago pendiente"}
-          />
-          <RewardsPanel points={state.rewardPoints} />
-        </div>
+        <TopInfoBar
+          guestName={state.guestName}
+          points={state.rewardPoints}
+          tableName={selectedTable?.name}
+          orderLabel={lastOrder ? orderLabels[lastOrder.status] : "Pago pendiente"}
+        />
       }
     >
       <div className="grid gap-4 sm:gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <SectionCard eyebrow="Paso 4" title="Pago simulado">
+        <SectionCard eyebrow="Pago simulado" title="Confirmar compra">
           {!selectedTable || state.cart.length === 0 ? (
             <div className="module-card">
               <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">No hay pedido listo</p>
@@ -78,13 +68,13 @@ export function ClientPaymentScreen() {
 
               <div className="module-card">
                 <p className="font-display text-4xl uppercase leading-none tracking-[0.08em] text-white">
-                  Confirmar y generar pedido
+                  Generar pedido
                 </p>
                 <p className="mt-3 text-sm leading-6 text-slate-300">
-                  Al confirmar, el sistema crea un pedido nuevo con estado inicial &quot;Pedido recibido&quot; y lo envia al panel del hornero.
+                  Al confirmar, el sistema crea un pedido nuevo con estado inicial &quot;Pedido recibido&quot; y lo envia al panel del cocinero.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
-                  <button type="button" className="action-pill bg-white text-slate-950" onClick={handlePayment}>
+                  <button type="button" className="action-pill action-pill-primary bg-white text-slate-950" onClick={handlePayment}>
                     Confirmar pago
                   </button>
                   <PrimaryButton href="/cliente/menu" variant="ghost">Volver al menu</PrimaryButton>

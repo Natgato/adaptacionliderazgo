@@ -1,14 +1,14 @@
 "use client";
 
 import { DemoShell } from "@/app/components/demo-shell";
-import { KpiStrip, OrderCard, SectionCard } from "@/app/components/demo-ui";
+import { KpiStrip, OrderCard, PrimaryButton, SectionCard } from "@/app/components/demo-ui";
 import { type OrderStatus, useDemo } from "@/app/components/demo-provider";
 
 const kitchenActions: Array<{ label: string; status: OrderStatus }> = [
-  { label: "Marcar en preparacion", status: "preparacion" },
-  { label: "Marcar en horno", status: "horno" },
-  { label: "Marcar listo", status: "listo" },
-  { label: "Marcar entregado", status: "servido" },
+  { label: "En preparacion", status: "preparacion" },
+  { label: "En horno", status: "horno" },
+  { label: "Listo", status: "listo" },
+  { label: "Entregado", status: "servido" },
 ];
 
 export function KitchenScreen() {
@@ -17,27 +17,23 @@ export function KitchenScreen() {
 
   return (
     <DemoShell
-      title="Hornero / Cocina"
-      subtitle="Aqui se ve la cola de pedidos, el estado de cada orden y los botones para avanzar el flujo de cocina hasta dejarla lista."
+      title="Cocina"
+      subtitle="Pedidos activos y cambio de estados para avanzar el flujo."
       trafficLevel={state.trafficLevel}
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/hornero", label: "Cocina" },
-        { href: "/mozo", label: "Mozo" },
-        { href: "/admin", label: "Admin" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <KpiStrip
           items={[
-            { label: "Pedidos pendientes", value: pendingOrders.length },
-            { label: "Pedidos listos", value: stats.ordersReady },
-            { label: "En preparacion", value: stats.ordersInPreparation },
+            { label: "Pendientes", value: pendingOrders.length },
+            { label: "Listos", value: stats.ordersReady },
+            { label: "Preparacion", value: stats.ordersInPreparation },
             { label: "Promedio ETA", value: `${stats.averageEta} min` },
           ]}
         />
 
-        <SectionCard eyebrow="Cola activa" title="Pedidos pendientes">
+        <SectionCard eyebrow="Cola de cocina" title="Pedidos pendientes">
           <div className="grid gap-4 xl:grid-cols-2">
             {pendingOrders.map((order, index) => (
               <div key={order.id} className="panel-enter" style={{ ["--i" as string]: index }}>
@@ -51,7 +47,7 @@ export function KitchenScreen() {
                         <button
                           key={`${order.id}-${action.status}`}
                           type="button"
-                          className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100"
+                          className={action.status === "listo" ? "action-pill action-pill-primary bg-white text-slate-950" : "action-pill action-pill-secondary bg-[rgba(20,36,86,0.85)] text-cyan-100"}
                           onClick={() => updateOrderStatus(order.id, action.status)}
                         >
                           {action.label}

@@ -1,7 +1,7 @@
 "use client";
 
 import { DemoShell } from "@/app/components/demo-shell";
-import { KpiStrip, OrderCard, SectionCard, TableCard } from "@/app/components/demo-ui";
+import { KpiStrip, OrderCard, PrimaryButton, SectionCard, TableCard } from "@/app/components/demo-ui";
 import { type TableStatus, useDemo } from "@/app/components/demo-provider";
 
 const tableStatusOptions: Array<{ label: string; value: TableStatus }> = [
@@ -18,17 +18,13 @@ export function WaiterScreen() {
 
   return (
     <DemoShell
-      title="Mozo / Salon"
-      subtitle="El mozo vigila el estado de las mesas, ve los pedidos por servir y puede cerrar el circuito marcando la orden como servida."
+      title="Mozo"
+      subtitle="Control de mesas, pedidos listos y cierre del servicio."
       trafficLevel={state.trafficLevel}
-      navLinks={[
-        { href: "/", label: "Inicio" },
-        { href: "/hornero", label: "Cocina" },
-        { href: "/mozo", label: "Mozo" },
-        { href: "/admin", label: "Admin" },
-      ]}
+      headerMode="minimal"
+      headerAction={<PrimaryButton href="/" variant="ghost">Salir</PrimaryButton>}
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <KpiStrip
           items={[
             { label: "Mesas disponibles", value: stats.tablesAvailable },
@@ -38,8 +34,8 @@ export function WaiterScreen() {
           ]}
         />
 
-        <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-          <SectionCard eyebrow="Mesas" title="Estado del salon">
+        <div className="grid gap-4 sm:gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <SectionCard eyebrow="Salon" title="Estado de mesas">
             <div className="grid gap-4 md:grid-cols-2">
               {state.tables.map((table, index) => (
                 <div key={table.id} className="panel-enter" style={{ ["--i" as string]: index }}>
@@ -51,7 +47,7 @@ export function WaiterScreen() {
                           <button
                             key={`${table.id}-${option.value}`}
                             type="button"
-                            className="action-pill bg-[rgba(20,36,86,0.85)] text-cyan-100"
+                            className="action-pill action-pill-secondary bg-[rgba(20,36,86,0.85)] text-cyan-100"
                             onClick={() => updateTableStatus(table.id, option.value)}
                           >
                             {option.label}
@@ -65,7 +61,7 @@ export function WaiterScreen() {
             </div>
           </SectionCard>
 
-          <div className="grid gap-6">
+          <div className="grid gap-4 sm:gap-6">
             <SectionCard eyebrow="Listos para servir" title="Pedidos listos">
               <div className="space-y-4">
                 {readyOrders.length === 0 ? (
@@ -74,7 +70,7 @@ export function WaiterScreen() {
                       Nada listo todavia
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-300">
-                      Cuando cocina marque un pedido como listo, aparecerá aqui para ser servido.
+                      Cuando cocina marque un pedido como listo, aparecera aqui para ser servido.
                     </p>
                   </div>
                 ) : null}
@@ -85,7 +81,7 @@ export function WaiterScreen() {
                     table={state.tables.find((table) => table.id === order.tableId)}
                     menu={state.menu}
                     action={
-                      <button type="button" className="action-pill bg-white text-slate-950" onClick={() => updateOrderStatus(order.id, "servido")}>
+                      <button type="button" className="action-pill action-pill-primary bg-white text-slate-950" onClick={() => updateOrderStatus(order.id, "servido")}>
                         Marcar servido
                       </button>
                     }
@@ -94,7 +90,7 @@ export function WaiterScreen() {
               </div>
             </SectionCard>
 
-            <SectionCard eyebrow="Pendientes" title="Pedidos en curso">
+            <SectionCard eyebrow="Pedidos en curso" title="Pendientes">
               <div className="space-y-4">
                 {pendingOrders.map((order) => (
                   <OrderCard
